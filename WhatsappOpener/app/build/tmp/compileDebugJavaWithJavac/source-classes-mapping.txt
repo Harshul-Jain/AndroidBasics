@@ -1,2 +1,0 @@
-com/example/whatsappopener/BuildConfig.java
- com.example.whatsappopener.BuildConfig
