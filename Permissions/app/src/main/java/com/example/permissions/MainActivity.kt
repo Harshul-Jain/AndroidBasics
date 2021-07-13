@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btnStatusBar.setOnClickListener {
-            val cm :ConnectivityManager?= getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm :ConnectivityManager?= getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager//ACCESS_NETWORK_STATE permission is required
             val netInfo:Network?= cm?.activeNetwork
             val isConnected=netInfo != null
             tvStatus.setText(if(isConnected)"CONNECTED" else "DISCONNECTED")
