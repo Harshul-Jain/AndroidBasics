@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.textclassifier.TextClassifier
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,12 +18,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val alertDialog: AlertDialog = AlertDialog.Builder(this)
+            .setTitle("Hello from AlertDialog")
+            .setMessage("I'm a generic alert")
+            .create()
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Hello from Basic Activity", Snackbar.LENGTH_LONG)
-                .setAction("Undo", View.OnClickListener {
-                    Toast.makeText(this, "Hello, I'm Toast!", Toast.LENGTH_SHORT).show()
-                })
-                .show()
+            alertDialog.show()
+//            Snackbar.make(view, "Hello from Basic Activity", Snackbar.LENGTH_LONG)
+//                .setAction("Undo", View.OnClickListener {
+//                    Toast.makeText(this, "Hello, I'm Toast!", Toast.LENGTH_SHORT).show()
+//                })
+//                .show()
         }
     }
 
