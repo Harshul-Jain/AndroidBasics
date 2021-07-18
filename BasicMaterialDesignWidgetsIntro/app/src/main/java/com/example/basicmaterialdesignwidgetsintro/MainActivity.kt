@@ -6,6 +6,8 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +17,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Hello from Basic Activity", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(view, "Hello from Basic Activity", Snackbar.LENGTH_LONG)
+                .setAction("Undo", View.OnClickListener {
+                    Toast.makeText(this, "Hello, I'm Toast!", Toast.LENGTH_SHORT).show()
+                })
+                .show()
         }
     }
 
