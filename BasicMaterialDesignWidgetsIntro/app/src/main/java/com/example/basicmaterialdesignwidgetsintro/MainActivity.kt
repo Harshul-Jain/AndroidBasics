@@ -1,5 +1,6 @@
 package com.example.basicmaterialdesignwidgetsintro
 
+import android.content.DialogInterface
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -20,7 +21,11 @@ class MainActivity : AppCompatActivity() {
 
         val alertDialog: AlertDialog = AlertDialog.Builder(this)
             .setTitle("Hello from AlertDialog")
-            .setMessage("I'm a generic alert")
+            .setMessage("I'm a generic alert dialog!")
+            .setCancelable(false)
+            .setPositiveButton("Ok",DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int ->
+                Toast.makeText(this, "Hello, I'm Toast!", Toast.LENGTH_SHORT).show()
+            })
             .create()
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             alertDialog.show()
