@@ -2,12 +2,11 @@ package com.example.retrofitcoroutines
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,12 +29,22 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val response = api.getUsers()
+                val res1 = async { api.getUsers(1) }
+                Log.d("RetCor", "first page done ${System.currentTimeMillis()}")
                 //in Dispatchers.IO Toast does not works
+                val res2 = async { api.getUsers(2) }
+                Log.d("RetCor", "second page done ${System.currentTimeMillis()}")
+
+                val res = awaitAll(res1, res2)
+                Log.d("RetCor", "both pages done ${System.currentTimeMillis()}")
+
+                val users = ArrayList<UsersResponse.User>()
+                res[0].body()?.users?.let { users.addAll(it) }
+                res[1].body()?.users?.let { users.addAll(it) }
 
                 GlobalScope.launch(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "Request Success", Toast.LENGTH_SHORT).show()
-                    response.body()?.users?.let { printUsers(it) }
+                    printUsers(users)
                     //function containing adapter should be kept on main ie Dispatchers.MAIN ,in this case printUsers(it)
 
                 }
