@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         }
         val viewPager = findViewById<ViewPager>(R.id.viewPager)
         viewPager.adapter = viewPagerAdapter
+        viewPager.setPageTransformer(true,DepthPageTransformer())
 //        supportFragmentManager
 //            .beginTransaction()
 //            .replace(R.id.container, fragment)
