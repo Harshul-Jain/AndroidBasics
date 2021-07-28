@@ -2,6 +2,7 @@ package com.example.dynamicfragments
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.viewpager.widget.ViewPager
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,10 +14,18 @@ class MainActivity : AppCompatActivity() {
         val fragment = FirstFragment()
         fragment.arguments = bundle
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, fragment)
-            .commitNow()
+        val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        viewPagerAdapter.apply {
+            add(fragment)
+            add(BlankFragment())
+            add(FirstFragment())
+        }
+        val viewPager = findViewById<ViewPager>(R.id.viewPager)
+        viewPager.adapter = viewPagerAdapter
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.container, fragment)
+//            .commitNow()
 //        supportFragmentManager
 //            .beginTransaction()
 //            .replace(R.id.container, BlankFragment())
