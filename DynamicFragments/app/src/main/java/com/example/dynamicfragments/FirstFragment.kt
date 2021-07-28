@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,16 +35,19 @@ class FirstFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?=inflater.inflate(R.layout.fragment_first, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_first, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val button=view.findViewById<Button>(R.id.button)
+        val button = view.findViewById<Button>(R.id.button)
+        val textView: TextView = view.findViewById(R.id.textView)
+        val name: String = arguments?.getString("KEY") ?: "Default"
         button.setOnClickListener {
-            Toast.makeText(requireContext(),"Toast from Fragment",Toast.LENGTH_LONG).show()
-            
+            Toast.makeText(requireContext(), "Toast from Fragment", Toast.LENGTH_LONG).show()
+            textView.text = name
         }
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
