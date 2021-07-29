@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         }
         val button: Button = findViewById(R.id.button)
         val button1: Button = findViewById(R.id.button1)
+        val button2: Button = findViewById(R.id.button2)
         button.setOnClickListener {
             val simpleNotification = NotificationCompat.Builder(this, "first")
                 .setContentTitle("Simple Title")
@@ -55,6 +56,23 @@ class MainActivity : AppCompatActivity() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build()
             nm.notify(2, clickableNotification)
+        }
+        button2.setOnClickListener {
+            val i = Intent()
+            i.action = Intent.ACTION_VIEW
+            i.data = Uri.parse("https://www.google.com")
+
+            val pi = PendingIntent.getActivity(this, 123, i, PendingIntent.FLAG_UPDATE_CURRENT)
+            val clickableNotification = NotificationCompat.Builder(this, "first")
+                .setContentTitle("Simple Title")
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .addAction(R.drawable.ic_launcher_foreground, "CLICK HERE", pi)
+                .setContentText("This is sample description of the notification")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build()
+            nm.notify(3, clickableNotification)
         }
     }
 }
