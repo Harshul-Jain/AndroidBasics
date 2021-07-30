@@ -20,8 +20,15 @@ class MainActivity : AppCompatActivity() {
             //Schedule a task that will run 5 minutes from now and start my app
             val pi = PendingIntent.getActivity(baseContext, 123, i, PendingIntent.FLAG_ONE_SHOT)
             val alarmManager: AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()+1000, pi)
+            //alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime()+1000, pi)
             // current time + the time delay for scheduling the alarm
+            alarmManager.setRepeating(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + 100,
+                100,
+                pi
+            )
+            //Since Android lollipop Job Scheduler have been Introduced
         }
     }
 }
