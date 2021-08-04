@@ -1,11 +1,12 @@
 package com.example.roomdb
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(user: User)
+    fun insert(user: User)
 
     @Insert
     fun insertAll(list: List<User>)
@@ -14,7 +15,7 @@ interface UserDao {
     fun delete(user: User)
 
     @Query("SELECT * FROM User")
-   suspend fun getAllUser(): List<User>
+    fun getAllUser(): LiveData<List<User>>
 
     @Query("Select * From User where age>=:age")
     fun getUserWithAge(age: Int): List<User>
