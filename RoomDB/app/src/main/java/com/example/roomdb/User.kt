@@ -2,6 +2,7 @@ package com.example.roomdb
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+
 @Entity
 data class User(
     val name: String,

@@ -12,10 +12,11 @@ interface UserDao {
 
     @Delete
     fun delete(user: User)
+
     @Query("SELECT * FROM User")
-    fun getAllUser():List<User>
+    fun getAllUser(): List<User>
 
     @Query("Select * From User where age>=:age")
-    fun getUserWithAge(age:Int):List<User>
+    fun getUserWithAge(age: Int): List<User>
 
 }
