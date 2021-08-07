@@ -9,7 +9,10 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        app:title="Todo"
+        app:titleTextColor="@android:color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoRv"
@@ -22,5 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="32sp" />
+        android:layout_margin="32sp"
+        android:backgroundTint="@android:color/holo_orange_light"
+        android:src="@drawable/ic_baseline_add_task_24"
+        app:tint="@color/blue" />
 </RelativeLayout>
