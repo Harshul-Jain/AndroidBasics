@@ -26,6 +26,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="32sp"
+        android:onClick="openNewTask"
         android:backgroundTint="@android:color/holo_orange_light"
         android:src="@drawable/ic_baseline_add_task_24"
         app:tint="@color/blue" />
