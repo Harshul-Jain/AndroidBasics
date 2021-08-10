@@ -10,6 +10,10 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.room.Room
 import kotlinx.android.synthetic.main.activity_task.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 const val DB_NAME = "todo.db"
@@ -23,11 +27,7 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
         arrayListOf("Personal", "Business", "Insurance", "Shopping", "Banking", "Work")
 
     val db by lazy {
-        Room.databaseBuilder(
-            this,
-            AppDatabase::class.java,
-            DB_NAME
-        )
+        AppDatabase.getDatabase(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,7 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
 
         dateEdt.setOnClickListener(this)
         timeEdt.setOnClickListener(this)
+        saveBtn.setOnClickListener(this)
         setUpSpinner()
     }
 
@@ -59,6 +60,34 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
             R.id.timeEdt -> {
                 setTimeListener()
             }
+            R.id.saveBtn -> {
+                saveTodo()
+            }
+        }
+    }
+
+    private fun saveTodo() {
+        val category = spinnerCategory.selectedItem.toString()
+        val title = titleEdtTxt.text.toString()
+        val description = taskInpLay.editText?.text.toString()
+        val finishTime = timeEdt.text.toString()
+        val finishDate = dateEdt.text.toString()
+
+
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val id = withContext(Dispatchers.IO) {
+                return@withContext db.todoDao().insertTask(
+                    TodoModel(
+                        title,
+                        description,
+                        category,
+                        finishDate.toLong(),
+                        finishTime.toLong()
+                    )
+                )
+            }
+            finish()
         }
     }
 

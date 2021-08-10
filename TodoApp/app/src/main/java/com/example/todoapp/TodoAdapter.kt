@@ -45,6 +45,10 @@ class TodoAdapter(private val list: List<TodoModel>) :
         )
     }
 
+    override fun getItemId(position: Int): Long {
+        return list[position].id
+    }
+
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bind(list[position])
     }

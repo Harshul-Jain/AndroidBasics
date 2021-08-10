@@ -45,6 +45,7 @@
         app:hintTextColor="@color/design_default_color_primary_dark">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titleEdtTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter task title"
@@ -78,7 +79,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:hint="Enter your Task"
-            android:lines="3"
+            android:lines="1"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textSize="18sp" />
@@ -177,7 +178,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@android:color/holo_red_light"
         android:text="Save Task"
