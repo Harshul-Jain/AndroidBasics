@@ -26,6 +26,8 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
     private val labels =
         arrayListOf("Personal", "Business", "Insurance", "Shopping", "Banking", "Work")
 
+    var finalDate = 0L
+    var finalTime = 0L
     val db by lazy {
         AppDatabase.getDatabase(this)
     }
@@ -68,12 +70,8 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveTodo() {
         val category = spinnerCategory.selectedItem.toString()
-        val title = titleEdtTxt.text.toString()
+        val title = titleInpLay.editText?.text.toString()
         val description = taskInpLay.editText?.text.toString()
-        val finishTime = timeEdt.text.toString()
-        val finishDate = dateEdt.text.toString()
-
-
 
         GlobalScope.launch(Dispatchers.Main) {
             val id = withContext(Dispatchers.IO) {
@@ -82,8 +80,8 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
                         title,
                         description,
                         category,
-                        finishDate.toLong(),
-                        finishTime.toLong()
+                        finalDate,
+                        finalTime
                     )
                 )
             }
@@ -111,6 +109,7 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateTime() {
         val myFormat = " h:mm a"
         val sdf = SimpleDateFormat(myFormat)
+        finalTime = myCalendar.time.time
         timeEdt.setText(sdf.format(myCalendar.time))
     }
 
@@ -135,6 +134,7 @@ class TaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateDate() {
         val myFormat = "EEE,d MMM yyyy"
         val sdf = SimpleDateFormat(myFormat)
+        finalDate = myCalendar.time.time
         dateEdt.setText(sdf.format(myCalendar.time))
         timeInpLay.visibility = View.VISIBLE
     }
