@@ -4,6 +4,9 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -22,19 +25,19 @@ class MainActivity : AppCompatActivity() {
         val okHttpClient = OkHttpClient()
 
         val request = Request.Builder()
-                .url("https://api.github.com/users/aggarwalpulkit596")
-                .build()
-        GlobalScope.launch(Dispatchers.Main){
+            .url("https://api.github.com/users/aggarwalpulkit596")
+            .build()
+
+        val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
+        GlobalScope.launch(Dispatchers.Main) {
             val response = withContext(Dispatchers.IO) {
                 okHttpClient.newCall(request).execute().body?.string()
             }
-            val obj = JSONObject(response)
-            val image = obj.getString("avatar_url")
-            val login = obj.getString("login")
-            val name = obj.getString("name")
-            textView.text = name
-            textView2.text = login
-            Picasso.get().load(image).into(imageView)
+            val user = gson.fromJson<User>(response, User::class.java)
+            textView.text = user.name
+            textView2.text = user.login
+            Picasso.get().load(user.avatarUrl).into(imageView)
         }
     }
 }
