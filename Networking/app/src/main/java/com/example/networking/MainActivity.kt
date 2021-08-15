@@ -34,6 +34,15 @@ class MainActivity : AppCompatActivity() {
             adapter = this@MainActivity.adapter
         }
 
-
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = withContext(Dispatchers.IO) {
+                Client.api.getUsers()
+            }
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    adapter.swapData(it)
+                }
+            }
+        }
     }
 }

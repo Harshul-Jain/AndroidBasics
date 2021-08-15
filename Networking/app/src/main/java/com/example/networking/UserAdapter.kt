@@ -29,6 +29,11 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
         )
     }
 
+    fun swapData(data: List<User>) {
+        this.data = data
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(data[position])
     }
