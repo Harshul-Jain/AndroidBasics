@@ -12,7 +12,7 @@ interface GithubService {
     @GET("users/{id}")
     suspend fun getUserById(@Path("id")id:String):Response<User>
 
-    @GET("users")
-    suspend fun searchUsers(@Query("q")query: String): Response<List<User>>
+    @GET("search/users")
+    suspend fun searchUsers(@Query("q")query: String): Response<UserResponse>
 
 }
