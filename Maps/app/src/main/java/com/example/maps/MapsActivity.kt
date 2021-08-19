@@ -1,7 +1,10 @@
 package com.example.maps
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,15 +26,48 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    override fun onStart() {
+        requestAccessFineLocation()
+        super.onStart()
+        when {
+            isFineLocationGranted() -> {
+                setUpLocationListener()
+            }
+            else -> requestAccessFineLocation()
+        }
+    }
+
+    private fun isFineLocationGranted(): Boolean {
+        return checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            999 -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setUpLocationListener()
+            } else {
+                Toast.makeText(this, "Permission Not Granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setUpLocationListener() {
+
+    }
+
+
+    private fun requestAccessFineLocation() {
+        this.requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            999
+        )
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.apply {
