@@ -1,7 +1,11 @@
 package com.example.maps
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -56,8 +60,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun setUpLocationListener() {
-
+        val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val providers = lm.getProviders(true)
+        var l: Location? = null
+        for (i in providers.indices.reversed()) {
+            l = lm.getLastKnownLocation(providers[i])
+            if (l != null) break
+        }
+        l?.let {
+            if (::mMap.isInitialized) {
+                val current = LatLng(it.latitude, it.longitude)
+                mMap.addMarker(MarkerOptions().position(current).title("Marker in Current Area"))
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
+            }
+        }
     }
 
 
