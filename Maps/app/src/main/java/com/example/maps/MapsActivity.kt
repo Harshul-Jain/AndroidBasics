@@ -3,12 +3,16 @@ package com.example.maps
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -18,7 +22,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-
+    val locationManager by lazy {
+        getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    }
     private lateinit var mMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +41,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onStart()
         when {
             isFineLocationGranted() -> {
-                setUpLocationListener()
+                when {
+                    isLocationEnabled() -> setUpLocationListener()
+                    else -> showGPSNotEnableDialog()
+                }
             }
             else -> requestAccessFineLocation()
         }
@@ -53,7 +62,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             999 -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setUpLocationListener()
+                when {
+                    isLocationEnabled() -> setUpLocationListener()
+                    else -> showGPSNotEnableDialog()
+                }
             } else {
                 Toast.makeText(this, "Permission Not Granted", Toast.LENGTH_SHORT).show()
             }
@@ -62,11 +74,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun setUpLocationListener() {
-        val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val providers = lm.getProviders(true)
+        val providers = locationManager.getProviders(true)
         var l: Location? = null
         for (i in providers.indices.reversed()) {
-            l = lm.getLastKnownLocation(providers[i])
+            l = locationManager.getLastKnownLocation(providers[i])
             if (l != null) break
         }
         l?.let {
@@ -84,6 +95,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             999
         )
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled((LocationManager.NETWORK_PROVIDER))
+    }
+
+    private fun showGPSNotEnableDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Enable GPS")
+            .setMessage("GPS is required for Google Maps")
+            .setCancelable(false)
+            .setPositiveButton("Enable Now") { dialogInterface: DialogInterface, i: Int ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                dialogInterface.dismiss()
+            }.show()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
