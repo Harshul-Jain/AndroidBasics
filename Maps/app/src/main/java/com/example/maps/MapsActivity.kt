@@ -10,10 +10,15 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -74,20 +79,50 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun setUpLocationListener() {
-        val providers = locationManager.getProviders(true)
-        var l: Location? = null
-        for (i in providers.indices.reversed()) {
-            l = locationManager.getLastKnownLocation(providers[i])
-            if (l != null) break
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        val locationRequest = LocationRequest.create().apply {
+            interval = 2000
+            fastestInterval = 2000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            smallestDisplacement = 1f
         }
-        l?.let {
-            if (::mMap.isInitialized) {
-                val current = LatLng(it.latitude, it.longitude)
-                mMap.addMarker(MarkerOptions().position(current).title("Marker in Current Area"))
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
-            }
-        }
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    super.onLocationResult(locationResult)
+                    for (location in locationResult.locations) {
+                        val current = LatLng(location.latitude, location.longitude)
+                        if (::mMap.isInitialized) {
+                            mMap.addMarker(
+                                MarkerOptions().position(current).title("Marker in Current Area")
+                            )
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
+                        }
+                    }
+                }
+
+            },
+            Looper.myLooper()
+        )
     }
+
+//    @SuppressLint("MissingPermission")
+//    private fun setUpLocationListener() {
+//        val providers = locationManager.getProviders(true)
+//        var l: Location? = null
+//        for (i in providers.indices.reversed()) {
+//            l = locationManager.getLastKnownLocation(providers[i])
+//            if (l != null) break
+//        }
+//        l?.let {
+//            if (::mMap.isInitialized) {
+//                val current = LatLng(it.latitude, it.longitude)
+//                mMap.addMarker(MarkerOptions().position(current).title("Marker in Current Area"))
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
+//            }
+//        }
+//    }
 
 
     private fun requestAccessFineLocation() {
@@ -98,7 +133,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun isLocationEnabled(): Boolean {
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
                 locationManager.isProviderEnabled((LocationManager.NETWORK_PROVIDER))
     }
 
