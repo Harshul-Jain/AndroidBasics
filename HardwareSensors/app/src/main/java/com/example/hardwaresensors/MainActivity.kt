@@ -17,13 +17,21 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     lateinit var sensorManager: SensorManager
     lateinit var proxSensor: Sensor
+    lateinit var accelSensor: Sensor
 
     val colors = arrayOf(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW)
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event!!.values[0] > 0) {
-            flproxIndicator.setBackgroundColor(colors[Random.nextInt(6)])
-        }
+//        if (event!!.values[0] > 0) {
+//            flproxIndicator.setBackgroundColor(colors[Random.nextInt(6)])
+//        }
+        Log.d("HWSENS", """
+            ----
+            ax = ${event!!.values[0]}
+            ay = ${event!!.values[1]}
+            az = ${event!!.values[2]}
+            ----
+        """.trimIndent())
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -35,11 +43,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setContentView(R.layout.activity_main)
         sensorManager = getSystemService<SensorManager>()!!
         proxSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+        accelSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     }
 
     override fun onResume() {
         super.onResume()
-        sensorManager.registerListener(this, proxSensor, 1000 * 1000)
+        sensorManager.registerListener(this, accelSensor, 1000 * 1000)
     }
 
     override fun onPause() {
