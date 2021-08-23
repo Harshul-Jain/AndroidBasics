@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sensorManager = getSystemService<SensorManager>()
+        sensorManager = getSystemService<SensorManager>()!!
         proxSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
         sensorEventListener = object : SensorEventListener {
