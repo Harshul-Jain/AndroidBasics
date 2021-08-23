@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.getSystemService
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -25,13 +26,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 //        if (event!!.values[0] > 0) {
 //            flproxIndicator.setBackgroundColor(colors[Random.nextInt(6)])
 //        }
-        Log.d("HWSENS", """
-            ----
-            ax = ${event!!.values[0]}
-            ay = ${event!!.values[1]}
-            az = ${event!!.values[2]}
-            ----
-        """.trimIndent())
+        flAccelIndicator.setBackgroundColor(Color.rgb(
+                accel2Color(event!!.values[0]),
+                accel2Color(event!!.values[1]),
+                accel2Color(event!!.values[2])
+        ))
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -55,4 +54,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         sensorManager.unregisterListener(this)
         super.onPause()
     }
+
+    fun accel2Color(accel: Float): Int = (((accel + 12) / 24) * 255).toInt()
 }
