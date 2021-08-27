@@ -3,6 +3,8 @@ package com.example.firebase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 
 /*Topic - Firebase:- A very popular and common topic you as a Android developer need to know about .
@@ -16,12 +18,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val dbRef:DatabaseReference= FirebaseDatabase.getInstance().reference
         btnDb.setOnClickListener {
-            val note:String = etNote.text.toString()
+            val note: String = etNote.text.toString()
             //Upload the note to Firebase
-            
-
+           // FirebaseDatabase.getInstance().reference.setValue(note)
+            // the above line override the previous value So to make it
+            // separate we write
+           // FirebaseDatabase.getInstance().reference.push().setValue(note)
+            // to insert to particular node we write a DatabaseReference
+            dbRef.child("note").push().setValue(note)
+            dbRef.child("todo").push().setValue(note)
         }
     }
 }
