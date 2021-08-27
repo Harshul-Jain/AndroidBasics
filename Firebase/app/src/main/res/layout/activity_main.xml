@@ -8,15 +8,21 @@
     tools:context=".MainActivity">
 
     <EditText
+        android:id="@+id/etNote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etNote"
         android:hint="Add note to be saved here!" />
 
     <Button
         android:id="@+id/btnDb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Save" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
