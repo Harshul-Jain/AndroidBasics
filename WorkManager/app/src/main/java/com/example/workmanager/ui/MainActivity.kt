@@ -7,7 +7,7 @@ import com.example.workmanager.GithubWorker
 import com.example.workmanager.R
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
-
+https://medium.com/coding-blocks/handling-offline-network-request-workmanager-to-the-rescue-613887cd3034
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
