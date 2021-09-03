@@ -3,7 +3,15 @@ package com.example.camerax
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Size
+import android.view.ViewGroup
+import androidx.camera.core.AspectRatio
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraX
+import androidx.camera.core.Preview
+import androidx.camera.core.impl.PreviewConfig
 import androidx.core.app.ActivityCompat
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +23,9 @@ class MainActivity : AppCompatActivity() {
                 android.Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
+            textureView.post {
+                startCamera()
+            }
 
         } else {
             ActivityCompat.requestPermissions(
@@ -23,5 +34,19 @@ class MainActivity : AppCompatActivity() {
                 ), 1234
             )
         }
+    }
+
+    private fun startCamera() {
+        val previewConfig = PreviewConfig.Builder().apply {
+            setTargetAspectRatio(AspectRatio.RATIO_16_9)
+        }.build()
+        val preview = Preview(previewConfig)
+        preview.setOnPreviewOutputUpdateListener {
+            val parent = textureView.parent as ViewGroup
+            parent.removeView(textureView)
+            parent.addView(textureView, 0)
+            textureView.surfaceTexture = it.surfaceTexture
+        }
+        CameraX.bindToLifecycle(this, preview)
     }
 }
